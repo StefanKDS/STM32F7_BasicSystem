@@ -1,0 +1,182 @@
+sysmem.c
+
+caddr_t _sbrk(int incr)
+{
+	extern char end asm("end");
+	extern char _min_heap_end asm("_min_heap_end");
+	static char *heap_end;
+	char *prev_heap_end;
+
+	if (heap_end == 0)
+	heap_end = &end;
+
+	prev_heap_end = heap_end;
+	if (prev_heap_end + incr > &_min_heap_end) {
+	if (heap_end + incr > stack_ptr) {
+	// write(1, “Heap and stack collision\n”, 25);
+	// abort();
+	errno = ENOMEM;
+	return (caddr_t) -1;
+	}
+	}
+	heap_end += incr;
+	return (caddr_t) prev_heap_end;
+}
+
+================================================================
+
+Linker_Flash
+
+._user_heap_stack :
+{
+. = ALIGN(4);
+PROVIDE ( end = . );
+PROVIDE ( _end = . );
+. = . + _Min_Heap_Size;
+PROVIDE ( _min_heap_end = . );
+. = . + _Min_Stack_Size;
+. = ALIGN(4);
+} >RAM
+
+================================================================ 
+
+..._hal_conf.h
+
+#define HAL_LTDC_MODULE_ENABLED
+
+
+
+/* Section 2: PHY configuration section */
+
+/* LAN8742A_PHY_ADDRESS Address*/
+#define LAN8742A_PHY_ADDRESS           0
+/* PHY Reset delay these values are based on a 1 ms Systick interrupt*/
+#define PHY_RESET_DELAY                 ((uint32_t)0x00000FFFU)
+/* PHY Configuration delay */
+#define PHY_CONFIG_DELAY                ((uint32_t)0x00000FFFU)
+
+#define PHY_READ_TO                     ((uint32_t)0x0000FFFFU)
+#define PHY_WRITE_TO                    ((uint32_t)0x0000FFFFU)
+
+/* Section 3: Common PHY Registers */
+
+#define PHY_BCR                         ((uint16_t)0x00U)    /*!< Transceiver Basic Control Register   */
+#define PHY_BSR                         ((uint16_t)0x01U)    /*!< Transceiver Basic Status Register    */
+
+#define PHY_RESET                       ((uint16_t)0x8000U)  /*!< PHY Reset */
+#define PHY_LOOPBACK                    ((uint16_t)0x4000U)  /*!< Select loop-back mode */
+#define PHY_FULLDUPLEX_100M             ((uint16_t)0x2100U)  /*!< Set the full-duplex mode at 100 Mb/s */
+#define PHY_HALFDUPLEX_100M             ((uint16_t)0x2000U)  /*!< Set the half-duplex mode at 100 Mb/s */
+#define PHY_FULLDUPLEX_10M              ((uint16_t)0x0100U)  /*!< Set the full-duplex mode at 10 Mb/s  */
+#define PHY_HALFDUPLEX_10M              ((uint16_t)0x0000U)  /*!< Set the half-duplex mode at 10 Mb/s  */
+#define PHY_AUTONEGOTIATION             ((uint16_t)0x1000U)  /*!< Enable auto-negotiation function     */
+#define PHY_RESTART_AUTONEGOTIATION     ((uint16_t)0x0200U)  /*!< Restart auto-negotiation function    */
+#define PHY_POWERDOWN                   ((uint16_t)0x0800U)  /*!< Select the power down mode           */
+#define PHY_ISOLATE                     ((uint16_t)0x0400U)  /*!< Isolate PHY from MII                 */
+
+#define PHY_AUTONEGO_COMPLETE           ((uint16_t)0x0020U)  /*!< Auto-Negotiation process completed   */
+#define PHY_LINKED_STATUS               ((uint16_t)0x0004U)  /*!< Valid link established               */
+#define PHY_JABBER_DETECTION            ((uint16_t)0x0002U)  /*!< Jabber condition detected            */
+
+/* Section 4: Extended PHY Registers */
+#define PHY_SR                          ((uint16_t)0x10U)    /*!< PHY status register Offset                      */
+
+#define PHY_SPEED_STATUS                ((uint16_t)0x0002U)  /*!< PHY Speed mask                                  */
+#define PHY_DUPLEX_STATUS               ((uint16_t)0x0004U)  /*!< PHY Duplex mask                                 */
+
+#define PHY_ISFR                        ((uint16_t)0x001DU)    /*!< PHY Interrupt Source Flag register Offset   */
+#define PHY_ISFR_INT4                   ((uint16_t)0x000BU)  /*!< PHY Link down inturrupt       */
+
+
+================================================================
+
+usbh_hid.c
+
+int oldX, oldY;
+
+__weak void USBH_HID_EventCallback(USBH_HandleTypeDef *phost)
+{
+	HID_TypeTypeDef devtype = USBH_HID_GetDeviceType(phost);
+
+	if(devtype == HID_MOUSE)
+	{
+		BSP_LCD_SelectLayer(0);
+		HID_MOUSE_Info_TypeDef *Mouse_Info;
+		Mouse_Info = USBH_HID_GetMouseInfo(phost);  // Get the info
+		int X_Val = Mouse_Info->x;  // get the x value
+		int Y_Val = Mouse_Info->y;  // get the y value
+		if (X_Val > 127) X_Val -= 255;
+		if (Y_Val > 127) Y_Val -= 255;
+
+		uint32_t oldColor = BSP_LCD_GetTextColor();
+
+		BSP_LCD_SetTextColor(LCD_COLOR_TRANSPARENT);
+		BSP_LCD_FillRect(oldX,oldY,4,4);
+
+		oldX += X_Val;
+		oldY += (Y_Val/8);
+
+		if (oldX > 475)
+			oldX = 475;
+		if (oldX < 0)
+			oldX = 0;
+		if (oldY > 540)
+			oldY = 540;
+		if (oldY < 272)
+			oldY = 272;
+
+		BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+		BSP_LCD_FillRect(oldX,oldY,4,4);
+		BSP_LCD_SetTextColor(oldColor);
+		BSP_LCD_SelectLayer(1);
+
+		if (Mouse_Info->buttons[0] == 1)
+		{
+			ReactOnClick(oldX, oldY - 272);
+		}
+	}
+	else if (devtype == HID_KEYBOARD)
+	{
+		uint8_t key;
+
+		HID_KEYBD_Info_TypeDef *Keyboard_Info;
+		Keyboard_Info = USBH_HID_GetKeybdInfo(phost);
+
+		if(Keyboard_Info!=NULL)
+		{
+			key=USBH_HID_GetASCIICode(Keyboard_Info);
+			if(key != ' ')
+			{
+				ReactOnKey(key);
+			}
+		}
+	}
+
+}
+
+
+==============================================================
+
+usb_hid_keybd.c
+
+uint8_t USBH_HID_GetASCIICode(HID_KEYBD_Info_TypeDef *info)
+{
+  uint8_t   output;
+  if (((info->lshift == 1) || (info->rshift == 1)) && info->keys[0] != 0)
+  {
+    output =  HID_KEYBRD_ShiftKey[HID_KEYBRD_Codes[info->keys[0]]];
+  }
+  else if((info->lshift == 0) && (info->rshift == 0))
+  {
+    output =  HID_KEYBRD_Key[HID_KEYBRD_Codes[info->keys[0]]];
+  }
+  return output;
+}
+
+==============================================================
+
+main.h
+
+#define USE_DHCP
+
+==============================================================
