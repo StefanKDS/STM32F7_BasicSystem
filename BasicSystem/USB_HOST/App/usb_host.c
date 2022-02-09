@@ -23,7 +23,9 @@
 
 #include "usb_host.h"
 #include "usbh_core.h"
-#include "usbh_hid.h"
+#include "usbh_msc.h"
+#include "usbh_diskio.h"
+#include "fatfs.h"
 
 /* USER CODE BEGIN Includes */
 #include <stm32746g_discovery_lcd.h>
@@ -31,7 +33,9 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+FATFS USBH_FatFs;
+USBH_HandleTypeDef hUSBHost;
+char USBDISKPath[4];
 /* USER CODE END PV */
 
 /* USER CODE BEGIN PFP */
@@ -77,7 +81,7 @@ void MX_USB_HOST_Init(void)
   {
     Error_Handler();
   }
-  if (USBH_RegisterClass(&hUsbHostFS, USBH_HID_CLASS) != USBH_OK)
+  if (USBH_RegisterClass(&hUsbHostFS, USBH_MSC_CLASS) != USBH_OK)
   {
     Error_Handler();
   }
@@ -103,16 +107,25 @@ static void USBH_UserProcess  (USBH_HandleTypeDef *phost, uint8_t id)
 
   case HOST_USER_DISCONNECTION:
 	  Appli_state = APPLICATION_DISCONNECT;
-  	  BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-      BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-      BSP_LCD_DisplayStringAt(420, 240 , (uint8_t*)"HID", LEFT_MODE );
+	  if (f_mount(NULL, "", 0) != FR_OK)
+	      {
+	       // LCD_ErrLog("ERROR : Cannot DeInitialize FatFs! \n");
+	      }
+	      if (FATFS_UnLinkDriver(USBDISKPath) != 0)
+	      {
+	        //LCD_ErrLog("ERROR : Cannot UnLink FatFS Driver! \n");
+	      }
   break;
 
   case HOST_USER_CLASS_ACTIVE:
 	  Appli_state = APPLICATION_READY;
-  	  BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
-   	  BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-   	  BSP_LCD_DisplayStringAt(420, 240 , (uint8_t*)"HID", LEFT_MODE );
+	  if (FATFS_LinkDriver(&USBH_Driver, USBDISKPath) == 0)
+	      {
+	        if (f_mount(&USBH_FatFs, "", 0) != FR_OK)
+	        {
+	          //LCD_ErrLog("ERROR : Cannot Initialize FatFs! \n");
+	        }
+	      }
   break;
 
   case HOST_USER_CONNECTION:
