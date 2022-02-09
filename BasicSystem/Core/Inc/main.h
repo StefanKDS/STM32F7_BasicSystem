@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define USE_DHCP
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

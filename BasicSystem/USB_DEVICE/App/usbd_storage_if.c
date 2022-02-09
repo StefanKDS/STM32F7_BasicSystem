@@ -66,6 +66,10 @@
 #define STORAGE_BLK_NBR                  0x10000
 #define STORAGE_BLK_SIZ                  0x200
 
+#define   MSD_OK                        ((uint8_t)0x00)
+#define   MSD_ERROR                     ((uint8_t)0x01)
+#define   MSD_ERROR_SD_NOT_PRESENT      ((uint8_t)0x02)
+
 /* USER CODE BEGIN PRIVATE_DEFINES */
 
 /* USER CODE END PRIVATE_DEFINES */
@@ -126,6 +130,7 @@ const int8_t STORAGE_Inquirydata_HS[] = {/* 36 */
   */
 
 extern USBD_HandleTypeDef hUsbDeviceHS;
+extern SD_HandleTypeDef hsd1;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
 
@@ -191,11 +196,38 @@ int8_t STORAGE_Init_HS(uint8_t lun)
   */
 int8_t STORAGE_GetCapacity_HS(uint8_t lun, uint32_t *block_num, uint16_t *block_size)
 {
-  /* USER CODE BEGIN 10 */
-  *block_num  = STORAGE_BLK_NBR;
-  *block_size = STORAGE_BLK_SIZ;
-  return (USBD_OK);
-  /* USER CODE END 10 */
+	/* USER CODE BEGIN 3 */
+	  HAL_SD_CardInfoTypeDef info;
+	  int8_t ret = -1;
+
+	  uint8_t SD_state = MSD_OK;
+	  	SD_state = BSP_SD_Init();
+
+	  	  if (SD_state != MSD_OK)
+	  	  {
+	  	    if(SD_state == MSD_ERROR_SD_NOT_PRESENT)
+	  	    {
+	  	      //BSP_LCD_DisplayStringAt(60, 50, (uint8_t *)"SD shall be inserted before running", LEFT_MODE);
+	  	    }
+	  	    else
+	  	    {
+	  	    //BSP_LCD_DisplayStringAt(60, 50, (uint8_t *)"SD Initialization : FAIL.", LEFT_MODE);
+	  	    }
+
+	  	    //BSP_LCD_DisplayStringAt(60, 50, (uint8_t *)"SD Comm Aborted.", LEFT_MODE);
+	  	  }
+	  	  else
+	  	  {
+	  		BSP_SD_GetCardInfo(&info);
+	  	  }
+
+	  BSP_SD_GetCardInfo(&info);
+
+	  *block_num =  info.LogBlockNbr  - 1;
+	  *block_size = info.LogBlockSize;
+	  ret = 0;
+	  return ret;
+	  /* USER CODE END 3 */
 }
 
 /**
@@ -232,9 +264,17 @@ int8_t STORAGE_IsWriteProtected_HS(uint8_t lun)
   */
 int8_t STORAGE_Read_HS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
-  /* USER CODE BEGIN 13 */
-  return (USBD_OK);
-  /* USER CODE END 13 */
+	/* USER CODE BEGIN 6 */
+
+	   int8_t ret = -1;
+
+	  HAL_SD_ReadBlocks(&hsd1, buf, blk_addr, blk_len, HAL_MAX_DELAY);
+
+	  /* Wait until SD card is ready to use for new operation */
+	  while (HAL_SD_GetCardState(&hsd1) != HAL_SD_CARD_TRANSFER){}
+	  ret = 0;
+	  return ret;
+	  /* USER CODE END 6 */
 }
 
 /**
@@ -247,9 +287,17 @@ int8_t STORAGE_Read_HS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t bl
   */
 int8_t STORAGE_Write_HS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
-  /* USER CODE BEGIN 14 */
-  return (USBD_OK);
-  /* USER CODE END 14 */
+	/* USER CODE BEGIN 7 */
+	  int8_t ret = -1;
+
+	   HAL_SD_WriteBlocks(&hsd1, buf, blk_addr, blk_len, HAL_MAX_DELAY);
+
+
+	  /* Wait until SD card is ready to use for new operation */
+	  while (HAL_SD_GetCardState(&hsd1) != HAL_SD_CARD_TRANSFER){}
+	  ret = 0;
+	  return ret;
+	  /* USER CODE END 7 */
 }
 
 /**
