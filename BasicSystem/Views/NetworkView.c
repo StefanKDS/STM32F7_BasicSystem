@@ -100,7 +100,7 @@ void NetViewTouchDetected(uint16_t x, uint16_t y)
 		{
 			CloseView();
 			InitMenuScreen((uint8_t *)"SEYERSOFT");
-			MainMenu();
+		//	MainMenu();
 		}
 	}
 	else

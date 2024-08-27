@@ -38,7 +38,7 @@
 #define IMG_NO_DATA
 #include "../../Images/Inc/icon_M.h"
 #include <stdbool.h>
-
+#include <MainGUI.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,6 +98,8 @@ bool HoldTouch;
 bool MenuActive = true;
 bool SDCardActive = false;
 bool NetViewActive = false;
+
+MainGUI* MainView;
 
 uint8_t hr;
 uint8_t mn;
@@ -181,11 +183,11 @@ void ReactOnKey(uint8_t key)
 
 void PointOne()
 {
-	void (*ptr)() = &MainMenu;
+	//void (*ptr)() = &OldMainMenu;
 
 	RemoveAllMenuPoints();
 	InitMenuPoints(1);
-	AddMenuPoint(110, 50, 150, 40, LCD_COLOR_ST_ORANGE,ptr, (uint8_t *)"Punkt 99");
+	//AddMenuPoint(110, 50, 150, 40, LCD_COLOR_ST_ORANGE,ptr, (uint8_t *)"Punkt 99");
 }
 
 void SDCardView()
@@ -204,7 +206,7 @@ void NetView_View()
 	ShowNetView((uint8_t *)"Network");
 }
 
-void MainMenu()
+void OldMainMenu()
 {
 	MenuActive = true;
 	SDCardActive = false;
@@ -231,8 +233,8 @@ void BSP_Config(void)
 	//BSP_LCD_SetTransparency(0, 50);
 	BSP_LCD_SelectLayer(1);
 
-	InitMenuScreen((uint8_t *)"SEYERSOFT");
-	MainMenu();
+	MainView = create_MainGUI((uint8_t *)"SEYERSOFT");
+	//InitMenuScreen((uint8_t *)"SEYERSOFT");
 }
 
 void QSPI_Init(void)

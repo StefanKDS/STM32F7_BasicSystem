@@ -88,7 +88,7 @@ void ViewTouchDetected(uint16_t x, uint16_t y)
 		if((y > 38) && (y < 119))
 		{
 			InitMenuScreen((uint8_t *)"SEYERSOFT");
-			MainMenu();
+			//MainMenu();
 		}
 	}
 
