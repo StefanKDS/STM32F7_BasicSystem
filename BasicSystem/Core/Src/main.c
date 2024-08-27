@@ -22,6 +22,7 @@
 #include "cmsis_os.h"
 #include "fatfs.h"
 #include "lwip.h"
+#include "lwip/apps/httpd.h"
 #include "usb_device.h"
 #include "usb_host.h"
 
@@ -73,6 +74,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 CRC_HandleTypeDef hcrc;
+
+extern struct netif gnetif;
 
 DMA2D_HandleTypeDef hdma2d;
 
@@ -130,7 +133,6 @@ void ShowNetView(uint8_t* headerString);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 void TS_Init(void)
 {
 	uint8_t  status = 0;
@@ -212,16 +214,10 @@ void MainMenu()
 	void (*sdcardview_ptr)() = &SDCardView;
 	void (*networkview_ptr)() = &NetView_View;
 
-	char buffer[10];
-	sprintf(buffer, "%d:%d:%d", hr, mn, sc);
-
-	InitMenuPoints(4);
+	InitMenuPoints(3);
     AddMenuPoint(60, 50, 110, 40, LCD_COLOR_ST_GREEN,p1_ptr, (uint8_t *)"Punkt 1");
 	AddMenuPoint(250, 50, 110, 40, LCD_COLOR_ST_MAGENTA,sdcardview_ptr, (uint8_t *)"SD Karte");
 	AddMenuPoint(60, 150, 110, 40, LCD_COLOR_ST_MAGENTA2,networkview_ptr, (uint8_t *)"Netzwerk");
-	AddMenuPoint(250, 150, 110, 40, LCD_COLOR_ST_SKIN,NULL, buffer);
-
-
 }
 
 void BSP_Config(void)
@@ -275,7 +271,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -338,17 +333,21 @@ int main(void)
 
   /* Start scheduler */
   osKernelStart();
+  /* USER CODE BEGIN 2 */
 
-  /* We should never get here as control is now taken by the scheduler */
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
+    httpd_init();
 
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+    /* USER CODE END 2 */
+
+    /* Infinite loop */
+    /* USER CODE BEGIN WHILE */
+    while (1)
+    {
+      /* USER CODE END WHILE */
+
+      /* USER CODE BEGIN 3 */
+    }
+    /* USER CODE END 3 */
 }
 
 /**
@@ -1120,8 +1119,13 @@ void StartDefaultTask(void const * argument)
 	osDelay(100);
 	QSPI_Init();
 
+	httpd_init();
+
   for(;;)
   {
+	  ethernetif_input(&gnetif);
+	  sys_check_timeouts();
+
 	  BSP_TS_GetState(&TS_State);
 	  if(TS_State.touchDetected && !HoldTouch)
 	  {

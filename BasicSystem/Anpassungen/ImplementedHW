@@ -3,7 +3,8 @@ SD-Card
 USB
 Flash
 USB_HID - FS
-TCP/IP
+TCP/IP with Webserver
 USB MSC to SD-Card - HS
-HTTP Client
-Audio
+
+Planned:
+- Sound

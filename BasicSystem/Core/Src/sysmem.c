@@ -47,7 +47,7 @@
 */
 
 /* Includes */
-#include <errno.h>
+#include <src/include/lwip/errno.h>
 #include <stdio.h>
 
 /* Variables */

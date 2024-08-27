@@ -139,13 +139,6 @@ static HAL_StatusTypeDef I2Cx_WriteMultiple(I2C_HandleTypeDef *i2c_handler, uint
 static HAL_StatusTypeDef I2Cx_IsDeviceReady(I2C_HandleTypeDef *i2c_handler, uint16_t DevAddress, uint32_t Trials);
 static void              I2Cx_Error(I2C_HandleTypeDef *i2c_handler, uint8_t Addr);
 
-/* AUDIO IO functions */
-void            AUDIO_IO_Init(void);
-void            AUDIO_IO_DeInit(void);
-void            AUDIO_IO_Write(uint8_t Addr, uint16_t Reg, uint16_t Value);
-uint16_t        AUDIO_IO_Read(uint8_t Addr, uint16_t Reg);
-void            AUDIO_IO_Delay(uint32_t Delay);
-
 /* TOUCHSCREEN IO functions */
 void            TS_IO_Init(void);
 void            TS_IO_Write(uint8_t Addr, uint8_t Reg, uint8_t Value);
@@ -387,6 +380,72 @@ uint32_t BSP_PB_GetState(Button_TypeDef Button)
   return HAL_GPIO_ReadPin(BUTTON_PORT[Button], BUTTON_PIN[Button]);
 }
 
+/**
+  * @brief  Configures COM port.
+  * @param  COM: COM port to be configured.
+  *          This parameter can be one of the following values:
+  *            @arg  COM1 
+  *            @arg  COM2 
+  * @param  huart: Pointer to a UART_HandleTypeDef structure that contains the
+  *                configuration information for the specified USART peripheral.
+  * @retval None
+  */
+void BSP_COM_Init(COM_TypeDef COM, UART_HandleTypeDef *huart)
+{
+  GPIO_InitTypeDef gpio_init_structure;
+
+  /* Enable GPIO clock */
+  DISCOVERY_COMx_TX_GPIO_CLK_ENABLE(COM);
+  DISCOVERY_COMx_RX_GPIO_CLK_ENABLE(COM);
+
+  /* Enable USART clock */
+  DISCOVERY_COMx_CLK_ENABLE(COM);
+
+  /* Configure USART Tx as alternate function */
+  gpio_init_structure.Pin = COM_TX_PIN[COM];
+  gpio_init_structure.Mode = GPIO_MODE_AF_PP;
+  gpio_init_structure.Speed = GPIO_SPEED_FAST;
+  gpio_init_structure.Pull = GPIO_PULLUP;
+  gpio_init_structure.Alternate = COM_TX_AF[COM];
+  HAL_GPIO_Init(COM_TX_PORT[COM], &gpio_init_structure);
+
+  /* Configure USART Rx as alternate function */
+  gpio_init_structure.Pin = COM_RX_PIN[COM];
+  gpio_init_structure.Mode = GPIO_MODE_AF_PP;
+  gpio_init_structure.Alternate = COM_RX_AF[COM];
+  HAL_GPIO_Init(COM_RX_PORT[COM], &gpio_init_structure);
+
+  /* USART configuration */
+  huart->Instance = COM_USART[COM];
+  HAL_UART_Init(huart);
+}
+
+/**
+  * @brief  DeInit COM port.
+  * @param  COM: COM port to be configured.
+  *          This parameter can be one of the following values:
+  *            @arg  COM1 
+  *            @arg  COM2 
+  * @param  huart: Pointer to a UART_HandleTypeDef structure that contains the
+  *                configuration information for the specified USART peripheral.
+  * @retval None
+  */
+void BSP_COM_DeInit(COM_TypeDef COM, UART_HandleTypeDef *huart)
+{
+  /* USART configuration */
+  huart->Instance = COM_USART[COM];
+  HAL_UART_DeInit(huart);
+
+  /* Enable USART clock */
+  DISCOVERY_COMx_CLK_DISABLE(COM);
+
+  /* DeInit GPIO pins can be done in the application 
+     (by surcharging this __weak function) */
+
+  /* GPIO pins clock, DMA clock can be shut down in the application 
+     by surcharging this __weak function */
+}
+
 /*******************************************************************************
                             BUS OPERATIONS
 *******************************************************************************/
@@ -604,73 +663,7 @@ static void I2Cx_Error(I2C_HandleTypeDef *i2c_handler, uint8_t Addr)
                             LINK OPERATIONS
 *******************************************************************************/
 
-/********************************* LINK AUDIO *********************************/
 
-/**
-  * @brief  Initializes Audio low level.
-  * @retval None
-  */
-void AUDIO_IO_Init(void) 
-{
-  I2Cx_Init(&hI2cAudioHandler);
-}
-
-/**
-  * @brief  Deinitializes Audio low level.
-  * @retval None
-  */
-void AUDIO_IO_DeInit(void)
-{
-}
-
-/**
-  * @brief  Writes a single data.
-  * @param  Addr: I2C address
-  * @param  Reg: Reg address 
-  * @param  Value: Data to be written
-  * @retval None
-  */
-void AUDIO_IO_Write(uint8_t Addr, uint16_t Reg, uint16_t Value)
-{
-  uint16_t tmp = Value;
-  
-  Value = ((uint16_t)(tmp >> 8) & 0x00FF);
-  
-  Value |= ((uint16_t)(tmp << 8)& 0xFF00);
-  
-  I2Cx_WriteMultiple(&hI2cAudioHandler, Addr, Reg, I2C_MEMADD_SIZE_16BIT,(uint8_t*)&Value, 2);
-}
-
-/**
-  * @brief  Reads a single data.
-  * @param  Addr: I2C address
-  * @param  Reg: Reg address 
-  * @retval Data to be read
-  */
-uint16_t AUDIO_IO_Read(uint8_t Addr, uint16_t Reg)
-{
-  uint16_t read_value = 0, tmp = 0;
-  
-  I2Cx_ReadMultiple(&hI2cAudioHandler, Addr, Reg, I2C_MEMADD_SIZE_16BIT, (uint8_t*)&read_value, 2);
-  
-  tmp = ((uint16_t)(read_value >> 8) & 0x00FF);
-  
-  tmp |= ((uint16_t)(read_value << 8)& 0xFF00);
-  
-  read_value = tmp;
-  
-  return read_value;
-}
-
-/**
-  * @brief  AUDIO Codec delay 
-  * @param  Delay: Delay in ms
-  * @retval None
-  */
-void AUDIO_IO_Delay(uint32_t Delay)
-{
-  HAL_Delay(Delay);
-}
 
 /********************************* LINK CAMERA ********************************/
 

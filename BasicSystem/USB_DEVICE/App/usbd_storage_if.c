@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_storage_if.h"
+#include "bsp_driver_sd.h"
 
 /* USER CODE BEGIN INCLUDE */
 

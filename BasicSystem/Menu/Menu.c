@@ -9,6 +9,9 @@
 #include "stm32746g_discovery_lcd.h"
 #include <stdlib.h>
 
+uint8_t m_nbrOfPoints;
+uint8_t m_addedMenuPoints;
+MenuPointLocation* m_menuPointLocations;
 
 // Methods
 

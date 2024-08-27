@@ -48,7 +48,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares/Third_Party/LwIP/system}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares/Third_Party/LwIP/src/include/lwip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.definedsymbols.1473295541" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.option.definedsymbols" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="DEBUG"/>
@@ -117,12 +116,6 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/src/include/compat/stdc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/system/arch"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
-<<<<<<< HEAD
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Drivers/Components/wm8994}&quot;"/>
-=======
->>>>>>> parent of 4a15232 (ON USB_FSH MSC implemented)
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.647095883" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -187,7 +180,6 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/src/include/compat/posix/sys"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/src/include/compat/stdc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/LwIP/system/arch"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags.4734052250" name="Other flags" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value="-femit-class-debug-always"/>
@@ -223,7 +215,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Images"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="LWIP"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Menu"/>
-						<entry excluding="ST/touchgfx/framework/source/touchgfx/containers|ST/touchgfx/os/OSWrappers_cmsis.cpp|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/OSWrappers.cpp|ST/touchgfx/framework/source/platform/driver/touch/SDL2TouchController.cpp|ST/touchgfx_backup|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/HALSDL2_icon.cpp|ST/touchgfx/framework/source/platform/driver/touch/ST1232TouchController.cpp|ST/touchgfx/framework/source/touchgfx/widgets|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/HALSDL2.cpp|ST/touchgfx/os/OSWrappers.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
+						<entry excluding="Third_Party/LwIP/src/apps/http/fsdata.c|ST/touchgfx/framework/source/touchgfx/containers|ST/touchgfx/os/OSWrappers_cmsis.cpp|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/OSWrappers.cpp|ST/touchgfx/framework/source/platform/driver/touch/SDL2TouchController.cpp|ST/touchgfx_backup|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/HALSDL2_icon.cpp|ST/touchgfx/framework/source/platform/driver/touch/ST1232TouchController.cpp|ST/touchgfx/framework/source/touchgfx/widgets|ST/touchgfx/framework/source/platform/hal/simulator/sdl2/HALSDL2.cpp|ST/touchgfx/os/OSWrappers.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="USB_DEVICE"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="USB_HOST"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Views"/>
@@ -275,7 +267,6 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares/Third_Party/LwIP/system}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Middlewares/Third_Party/LwIP/src/include/lwip}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1988530125" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -342,12 +333,6 @@
 									<listOptionValue builtIn="false" value="../USB_DEVICE/Target"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Inc"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
-<<<<<<< HEAD
-									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Host_Library/Class/MSC/Inc"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Drivers/Components/wm8994}&quot;"/>
-=======
->>>>>>> parent of 4a15232 (ON USB_FSH MSC implemented)
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1591354776" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -414,7 +399,6 @@
 									<listOptionValue builtIn="false" value="../USB_DEVICE/Target"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Core/Inc"/>
 									<listOptionValue builtIn="false" value="../Middlewares/ST/STM32_USB_Device_Library/Class/MSC/Inc"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/BasicSystem/Wave}&quot;"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags.5284505562" name="Other flags" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.option.otherflags" useByScannerDiscovery="false" valueType="stringList">
 									<listOptionValue builtIn="false" value="-femit-class-debug-always"/>

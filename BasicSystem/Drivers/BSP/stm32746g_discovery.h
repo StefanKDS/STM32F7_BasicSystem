@@ -44,6 +44,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_uart.h"
    
 /** @addtogroup BSP
   * @{
@@ -311,6 +312,8 @@ void      BSP_LED_Toggle(Led_TypeDef Led);
 void      BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
 void      BSP_PB_DeInit(Button_TypeDef Button);
 uint32_t  BSP_PB_GetState(Button_TypeDef Button);
+void      BSP_COM_Init(COM_TypeDef COM, UART_HandleTypeDef *husart);
+void      BSP_COM_DeInit(COM_TypeDef COM, UART_HandleTypeDef *huart);
 
 /**
   * @}

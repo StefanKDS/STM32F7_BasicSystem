@@ -16,6 +16,7 @@
 uint8_t m_nbrOfItems = 0;
 uint8_t m_addedItems = 0;
 uint8_t m_activeItem = -1;
+Items* m_displayItems;
 
 void MarkItem(int itemNbr);
 void UnMarkActualItem();

@@ -19,10 +19,6 @@ typedef struct
 	void (*ptr)();
 }MenuPointLocation;
 
-uint8_t m_nbrOfPoints;
-uint8_t m_addedMenuPoints;
-MenuPointLocation* m_menuPointLocations;
-
 void     InitMenuScreen(uint8_t* headerString);
 void 	 InitMenuPoints(uint8_t nbrOfPoints);
 void     AddMenuPoint(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, void (*ptr)(), uint8_t* text);

@@ -26,8 +26,6 @@ typedef struct
 	void (*func)();
 }Items;
 
-Items* m_displayItems;
-
 void     AddLabel(uint16_t Xpos, uint16_t Ypos, uint8_t* text);
 void     AddTextInput(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint8_t* text, uint16_t inputSize);
 void 	 DisplayItemTouchDetected(uint16_t x, uint16_t y);
