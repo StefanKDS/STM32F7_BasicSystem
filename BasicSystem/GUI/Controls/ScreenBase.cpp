@@ -86,6 +86,17 @@ void ScreenBase::RefreshScreen()
     }
 }
 
+void ScreenBase::DisplayTouched(uint16_t x, uint16_t y)
+{
+	for (ControlBase* control : controls)
+	{
+	    if (control->Click(x, y))
+	    {
+	        break;
+	   }
+	}
+}
+
 ScreenBase::~ScreenBase()
 {
 	for (ControlBase* control : controls)

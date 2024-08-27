@@ -13,13 +13,14 @@
 
 class Button : public ControlBase {
 public:
-	Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, void (*OnClickFunc)(), uint8_t* Text);
+	Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, uint32_t TextColor,void (*OnClickFunc)(), uint8_t* Text);
 	virtual ~Button();
 	virtual void Draw() override;
 
 private:
 	uint8_t* text;
 	uint32_t color;
+	uint32_t textcolor;
 };
 
 #endif /* CONTROLS_BUTTON_H_ */

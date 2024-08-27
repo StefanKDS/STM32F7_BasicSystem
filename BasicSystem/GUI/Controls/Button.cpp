@@ -7,7 +7,7 @@
 
 #include "Button.h"
 
-Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, void (*OnClickFunc)(), uint8_t* Text)
+Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, uint32_t TextColor, void (*OnClickFunc)(), uint8_t* Text)
 {
 	OnClick = NULL;
 	x = Xpos;
@@ -16,6 +16,7 @@ Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, ui
 	width = Width;
 	color = Color;
 	text = Text;
+	textcolor = TextColor;
 
 	if(OnClick == NULL)
 		OnClick = NULL;
@@ -39,7 +40,7 @@ void Button::Draw()
 	BSP_LCD_FillRect(x + (height/2), y, width, height+1);
 	BSP_LCD_FillCircle(x + width + (height/2),y+(height/2),height/2);
 
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_SetTextColor(textcolor);
 	BSP_LCD_SetBackColor(color);
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_DisplayStringAt(x + 25, y + height - 23 , text, LEFT_MODE );

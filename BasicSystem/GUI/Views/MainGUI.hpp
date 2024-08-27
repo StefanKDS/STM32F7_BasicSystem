@@ -18,6 +18,7 @@ public:
 
 public:
     MainView MainScreen;
+    void DisplayTouched(uint16_t x, uint16_t y);
 };
 
 

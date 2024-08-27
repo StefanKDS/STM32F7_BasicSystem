@@ -157,14 +157,7 @@ void ReactOnTouch(void)
 	x = TS_State.touchX[0];
 	y = TS_State.touchY[0];
 
-	if (MenuActive)
-		MenuTouchDetected(x,y);
-	else if(SDCardActive)
-		SDCardTouchDetected(x,y);
-	else if(NetViewActive)
-		NetViewTouchDetected(x,y);
-	else
-		ViewTouchDetected(x,y);
+	displayTouched_MainGUI(MainView, x, y);
 }
 
 void ReactOnClick(uint16_t x ,uint16_t y)

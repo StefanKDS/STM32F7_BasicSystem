@@ -17,6 +17,7 @@ public:
 	virtual ~ControlBase();
 
 	virtual void Draw(){};
+	bool Click(uint16_t x, uint16_t y) const;
 
 public:
 	uint16_t x;

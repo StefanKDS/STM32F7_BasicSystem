@@ -5,8 +5,8 @@
  *      Author: Stefan Seyer
  */
 
-#ifndef SCREENS_SCREENBASE_H_
-#define SCREENS_SCREENBASE_H_
+#ifndef CONTROLS_SCREENBASE_H_
+#define CONTROLS_SCREENBASE_H_
 
 #include "stdint.h"
 #include "ControlBase.h"
@@ -21,6 +21,7 @@ public:
 public:
     void AddControlItem(ControlBase* control);
     void RefreshScreen();
+    void DisplayTouched(uint16_t x, uint16_t y);
 
 private:
     void DrawHeader(uint8_t* headerString, uint32_t Color);
@@ -31,4 +32,4 @@ private:
     std::vector<ControlBase*> controls;
 };
 
-#endif /* SCREENS_SCREENBASE_H_ */
+#endif /* CONTROLS_SCREENBASE_H_ */

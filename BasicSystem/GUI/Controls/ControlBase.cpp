@@ -7,11 +7,25 @@
 
 #include "ControlBase.h"
 
-ControlBase::ControlBase() {
-	// TODO Auto-generated constructor stub
-
+ControlBase::ControlBase()
+{
 }
 
-ControlBase::~ControlBase() {
-	// TODO Auto-generated destructor stub
+ControlBase::~ControlBase()
+{
+}
+
+bool ControlBase::Click(uint16_t touchX, uint16_t touchY) const
+{
+    if (((touchX >= x && touchX < (x + width)) &&
+        (touchY >= y && touchY < (y + height))) == true)
+		{
+			if(OnClick != nullptr)
+			{
+				OnClick();
+				return true;
+			}
+		}
+
+    return false;
 }

@@ -18,6 +18,7 @@ typedef struct MainGUI MainGUI;
 
 MainGUI* create_MainGUI(uint8_t* headerString);
 void destroy_MainGUI(MainGUI* obj);
+void displayTouched_MainGUI(MainGUI* obj, uint16_t x, uint16_t y);
 
 #ifdef __cplusplus
 }
