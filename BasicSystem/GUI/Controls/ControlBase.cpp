@@ -20,9 +20,9 @@ bool ControlBase::Click(uint16_t touchX, uint16_t touchY) const
     if (((touchX >= x && touchX < (x + width)) &&
         (touchY >= y && touchY < (y + height))) == true)
 		{
-			if(OnClick != nullptr)
+			if(onClick)
 			{
-				OnClick();
+				onClick();
 				return true;
 			}
 		}

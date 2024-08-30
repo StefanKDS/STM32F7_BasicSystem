@@ -12,6 +12,14 @@
 #include "ControlBase.h"
 #include <vector>
 #include "Button.h"
+#include "Label.h"
+
+extern "C" {
+    #include "FreeRTOS.h"
+    #include "queue.h"
+	#include "main.h"
+    extern QueueHandle_t xQueue; // Deklariere die Queue als extern
+}
 
 class ScreenBase {
 public:
@@ -21,15 +29,19 @@ public:
 public:
     void AddControlItem(ControlBase* control);
     void RefreshScreen();
-    void DisplayTouched(uint16_t x, uint16_t y);
+    void Show();
 
 private:
     void DrawHeader(uint8_t* headerString, uint32_t Color);
     void DrawLeftMenu();
     void DrawBottomMenu();
+    static void CppTask(void* pvParameters);
+    void StartCppTask();
 
 private:
     std::vector<ControlBase*> controls;
+    TaskHandle_t taskHandle;
+    bool stopCppTask;
 };
 
 #endif /* CONTROLS_SCREENBASE_H_ */

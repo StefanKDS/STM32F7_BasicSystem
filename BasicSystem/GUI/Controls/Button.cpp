@@ -7,9 +7,8 @@
 
 #include "Button.h"
 
-Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, uint32_t TextColor, void (*OnClickFunc)(), uint8_t* Text)
+Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, uint32_t Color, uint32_t TextColor, std::function<void()> OnClickFunc, uint8_t* Text)
 {
-	OnClick = NULL;
 	x = Xpos;
 	y = Ypos;
 	height = Height;
@@ -17,11 +16,7 @@ Button::Button(uint16_t Xpos, uint16_t Ypos, uint16_t Width, uint16_t Height, ui
 	color = Color;
 	text = Text;
 	textcolor = TextColor;
-
-	if(OnClick == NULL)
-		OnClick = NULL;
-	else
-		OnClick = OnClickFunc;
+	onClick = OnClickFunc;
 }
 
 Button::~Button()

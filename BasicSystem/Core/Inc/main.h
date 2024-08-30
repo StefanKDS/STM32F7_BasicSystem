@@ -29,6 +29,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_hal.h"
+#include "FreeRTOS.h"
+#include "queue.h"
+#include <stdint.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -57,6 +60,13 @@ void Error_Handler(void);
 void MainMenu();
 void ReactOnClick(uint16_t x ,uint16_t y);
 void ReactOnKey(uint8_t key);
+
+extern QueueHandle_t tsQueue;
+
+typedef struct {
+    uint16_t x;
+    uint16_t y;
+} TSDataStruct;
 
 /* USER CODE END EFP */
 

@@ -5,8 +5,8 @@
  *      Author: Stefan Seyer
  */
 
-#ifndef VIEWS_MAINMENUVIEW_HPP_
-#define VIEWS_MAINMENUVIEW_HPP_
+#ifndef CPPINTERFACE_MAINGUI_HPP_
+#define CPPINTERFACE_MAINGUI_HPP_
 
 #include "stdint.h"
 #include "MainView.hpp"
@@ -22,4 +22,4 @@ public:
 };
 
 
-#endif /* VIEWS_MAINMENUVIEW_HPP_ */
+#endif /* CPPINTERFACE_MAINGUI_HPP_ */

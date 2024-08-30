@@ -13,13 +13,9 @@
 
 class Label : public ControlBase{
 public:
-	Label(uint16_t Xpos, uint16_t Ypos, uint32_t TextColor, uint8_t* text);
+	Label(uint16_t Xpos, uint16_t Ypos, uint32_t TextColor, std::function<void()> OnClickFunc, uint8_t* Text);
 	virtual ~Label();
 	virtual void Draw() override;
-
-private:
-	uint8_t* text;
-	uint32_t textcolor;
 };
 
 #endif /* CONTROLS_LABEL_H_ */

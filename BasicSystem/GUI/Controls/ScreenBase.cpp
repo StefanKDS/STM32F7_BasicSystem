@@ -8,13 +8,25 @@
 #include "ScreenBase.h"
 #include "stm32746g_discovery_lcd.h"
 
+
+
 ScreenBase::ScreenBase(uint8_t* headerString)
 {
+	stopCppTask = false;
+
     BSP_LCD_Clear(LCD_COLOR_BLACK);
 
     DrawHeader(headerString, LCD_COLOR_ST_ORANGE);
     DrawLeftMenu();
     DrawBottomMenu();
+    StartCppTask();
+}
+
+void ScreenBase::Show()
+{
+	DrawHeader((uint8_t*)"SDCard", LCD_COLOR_ST_ORANGE);
+	DrawLeftMenu();
+	DrawBottomMenu();
 }
 
 void ScreenBase::DrawHeader(uint8_t* headerString, uint32_t Color)
@@ -86,19 +98,47 @@ void ScreenBase::RefreshScreen()
     }
 }
 
-void ScreenBase::DisplayTouched(uint16_t x, uint16_t y)
+void ScreenBase::CppTask(void* pvParameters)
 {
-	for (ControlBase* control : controls)
-	{
-	    if (control->Click(x, y))
-	    {
-	        break;
-	   }
-	}
+	ScreenBase* instance = static_cast<ScreenBase*>(pvParameters);
+
+    TSDataStruct data;
+
+    for (;;)
+    {
+    	if(instance->stopCppTask)
+    	{
+    		break;
+    	}
+
+        if (xQueueReceive(tsQueue, &data, portMAX_DELAY))
+        {
+        	for (ControlBase* control : instance->controls)
+        		{
+        		    if (control->Click(data.x, data.y))
+        		    {
+        		        break;
+        		   }
+        		}
+        }
+    }
+}
+
+void ScreenBase::StartCppTask()
+{
+    xTaskCreate(CppTask, "CppTask", configMINIMAL_STACK_SIZE, this, 1, &taskHandle);
 }
 
 ScreenBase::~ScreenBase()
 {
+	stopCppTask = true;
+
+	// Task löschen, wenn er existiert
+	if (taskHandle != NULL)
+	{
+	    vTaskDelete(taskHandle);
+	}
+
 	for (ControlBase* control : controls)
 	{
 		delete control;

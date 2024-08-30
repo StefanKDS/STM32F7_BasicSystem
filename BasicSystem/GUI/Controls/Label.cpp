@@ -7,18 +7,18 @@
 
 #include <Label.h>
 
-Label::Label(uint16_t Xpos, uint16_t Ypos, uint32_t TextColor, uint8_t* text)
+Label::Label(uint16_t Xpos, uint16_t Ypos, uint32_t TextColor, std::function<void()> OnClickFunc, uint8_t* Text)
 {
 		x = Xpos;
 		y = Ypos;
 		height = 0;
 		width = 0;
-		text = text;
+		text = Text;
 		textcolor = TextColor;
 }
 
-Label::~Label() {
-	// TODO Auto-generated destructor stub
+Label::~Label()
+{
 }
 
 void Label::Draw()

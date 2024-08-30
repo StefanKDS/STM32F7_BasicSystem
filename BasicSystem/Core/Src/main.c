@@ -92,6 +92,9 @@ SDRAM_HandleTypeDef hsdram1;
 
 osThreadId defaultTaskHandHandle;
 /* USER CODE BEGIN PV */
+QueueHandle_t tsQueue;
+
+
 static FMC_SDRAM_CommandTypeDef Command;
 static TS_StateTypeDef  TS_State;
 bool HoldTouch;
@@ -125,7 +128,6 @@ void StartDefaultTask(void const * argument);
 static void BSP_Config(void);
 static void TS_Init(void);
 static void ReactOnTouch(void);
-static void PointOne(void);
 static void QSPI_Init(void);
 void NetViewTouchDetected(uint16_t x, uint16_t y);
 void ViewTouchDetected(uint16_t x, uint16_t y);
@@ -152,35 +154,27 @@ void TS_Init(void)
 
 void ReactOnTouch(void)
 {
-	uint16_t x, y;
+	TSDataStruct data;
 
-	x = TS_State.touchX[0];
-	y = TS_State.touchY[0];
+	data.x = TS_State.touchX[0];
+	data.y = TS_State.touchY[0];
 
-	displayTouched_MainGUI(MainView, x, y);
+	xQueueSend(tsQueue, &data, portMAX_DELAY); // Sende die Daten in die Queue
 }
 
 void ReactOnClick(uint16_t x ,uint16_t y)
 {
-	if (MenuActive)
-		MenuTouchDetected(x,y);
-	else if(SDCardActive)
-		SDCardTouchDetected(x,y);
+	TSDataStruct data;
+	data.x = x;
+	data.y = y;
+
+	xQueueSend(tsQueue, &data, portMAX_DELAY); // Sende die Daten in die Queue
 }
 
 void ReactOnKey(uint8_t key)
 {
-	if(NetViewActive)
-		ViewKeyInput(key);
-}
-
-void PointOne()
-{
-	//void (*ptr)() = &OldMainMenu;
-
-	RemoveAllMenuPoints();
-	InitMenuPoints(1);
-	//AddMenuPoint(110, 50, 150, 40, LCD_COLOR_ST_ORANGE,ptr, (uint8_t *)"Punkt 99");
+	//if(NetViewActive)
+		//ViewKeyInput(key);
 }
 
 void SDCardView()
@@ -205,13 +199,9 @@ void OldMainMenu()
 	SDCardActive = false;
 	NetViewActive = false;
 	RemoveAllMenuPoints();
-	void (*p1_ptr)() = &PointOne;
-	void (*sdcardview_ptr)() = &SDCardView;
 	void (*networkview_ptr)() = &NetView_View;
 
 	InitMenuPoints(3);
-    AddMenuPoint(60, 50, 110, 40, LCD_COLOR_ST_GREEN,p1_ptr, (uint8_t *)"Punkt 1");
-	AddMenuPoint(250, 50, 110, 40, LCD_COLOR_ST_MAGENTA,sdcardview_ptr, (uint8_t *)"SD Karte");
 	AddMenuPoint(60, 150, 110, 40, LCD_COLOR_ST_MAGENTA2,networkview_ptr, (uint8_t *)"Netzwerk");
 }
 
@@ -223,11 +213,9 @@ void BSP_Config(void)
 	BSP_LCD_SelectLayer(0);
 	BSP_LCD_Clear(LCD_COLOR_TRANSPARENT);
 	BSP_LCD_SetBackColor(LCD_COLOR_TRANSPARENT);
-	//BSP_LCD_SetTransparency(0, 50);
 	BSP_LCD_SelectLayer(1);
 
 	MainView = create_MainGUI((uint8_t *)"SEYERSOFT");
-	//InitMenuScreen((uint8_t *)"SEYERSOFT");
 }
 
 void QSPI_Init(void)
@@ -297,8 +285,13 @@ int main(void)
   MX_I2C1_Init();
   MX_SDMMC1_SD_Init();
   MX_FATFS_Init();
+
   /* USER CODE BEGIN 2 */
-  // httpd_init();
+  tsQueue = xQueueCreate(1, sizeof(TSDataStruct));  // Erstelle die Queue
+  if (tsQueue == NULL)
+  {
+      // Fehlerbehandlung bei der Queue-Erstellung
+  }
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */

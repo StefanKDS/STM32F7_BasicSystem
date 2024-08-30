@@ -5,8 +5,8 @@
  *      Author: Stefan Seyer
  */
 
-#ifndef VIEWS_MAINGUI_H_
-#define VIEWS_MAINGUI_H_
+#ifndef CPPINTERFACE_MAINGUI_H_
+#define CPPINTERFACE_MAINGUI_H_
 
 #include "stdint.h"
 
@@ -24,4 +24,4 @@ void displayTouched_MainGUI(MainGUI* obj, uint16_t x, uint16_t y);
 }
 #endif
 
-#endif /* VIEWS_MAINGUI_H_ */
+#endif /* CPPINTERFACE_MAINGUI_H_ */
