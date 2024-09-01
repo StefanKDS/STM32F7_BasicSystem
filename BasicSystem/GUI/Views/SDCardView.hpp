@@ -18,7 +18,7 @@
 
 class SDCardView : public ScreenBase {
 public:
-    SDCardView(uint8_t* headerString);
+    SDCardView(uint8_t* headerString, ScreenManager& manager);
     virtual ~SDCardView();
 
 private:

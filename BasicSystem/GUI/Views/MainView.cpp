@@ -7,9 +7,10 @@
 
 #include "MainView.hpp"
 #include <functional>
+#include "ScreenManager.hpp"
 
 // C++-Schnittstelle
-MainView::MainView(uint8_t* headerString) : ScreenBase(headerString)
+MainView::MainView(uint8_t* headerString, ScreenManager& manager) : ScreenBase(headerString, manager)
 {
 
 	Button* button1 = new Button(60, 40, 100, 25, LCD_COLOR_ST_GREEN, LCD_COLOR_BLACK, std::bind(&MainView::ShowSDCardView, this), (uint8_t*)"SD Card");
@@ -19,7 +20,6 @@ MainView::MainView(uint8_t* headerString) : ScreenBase(headerString)
 	AddControlItem(button1);
 	AddControlItem(button2);
 	AddControlItem(label1);
-	RefreshScreen();
 }
 
 MainView::~MainView()
@@ -31,8 +31,6 @@ void MainView::ShowSDCardView()
 	// Verstecken der MainView, z.B. indem Sie das Display löschen oder die Steuerungselemente ausblenden
 	    BSP_LCD_Clear(LCD_COLOR_BLACK);
 
-	    // Erstellen und Anzeigen der SDCardView
-	    SDCardView* sdCardView = new SDCardView((uint8_t*)"SD Card");
-	    sdCardView->Show();
-
+	    screenManager.OpenView<SDCardView>((uint8_t*)"SD Karte");
+	    delete this;
 }

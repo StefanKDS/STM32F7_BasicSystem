@@ -38,7 +38,7 @@
 #define IMG_NO_DATA
 #include "../../Images/Inc/icon_M.h"
 #include <stdbool.h>
-#include <MainGUI.h>
+#include <ScreenManager.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,7 +102,7 @@ bool MenuActive = true;
 bool SDCardActive = false;
 bool NetViewActive = false;
 
-MainGUI* MainView;
+ScreenManager* screenManager;
 
 uint8_t hr;
 uint8_t mn;
@@ -215,7 +215,7 @@ void BSP_Config(void)
 	BSP_LCD_SetBackColor(LCD_COLOR_TRANSPARENT);
 	BSP_LCD_SelectLayer(1);
 
-	MainView = create_MainGUI((uint8_t *)"SEYERSOFT");
+	screenManager = create_ScreenManager();
 }
 
 void QSPI_Init(void)

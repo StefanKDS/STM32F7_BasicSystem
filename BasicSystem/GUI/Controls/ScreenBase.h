@@ -18,21 +18,25 @@ extern "C" {
     #include "FreeRTOS.h"
     #include "queue.h"
 	#include "main.h"
-    extern QueueHandle_t xQueue; // Deklariere die Queue als extern
+    extern QueueHandle_t xQueue;
 }
+
+class ScreenManager;
 
 class ScreenBase {
 public:
-    ScreenBase(uint8_t* headerString);
+    ScreenBase(uint8_t* HeaderString, ScreenManager& manager);
     virtual ~ScreenBase();
+
+protected:
+    ScreenManager& screenManager;
 
 public:
     void AddControlItem(ControlBase* control);
-    void RefreshScreen();
     void Show();
 
 private:
-    void DrawHeader(uint8_t* headerString, uint32_t Color);
+    void DrawHeader(uint8_t* HeaderString, uint32_t Color);
     void DrawLeftMenu();
     void DrawBottomMenu();
     static void CppTask(void* pvParameters);
@@ -42,6 +46,7 @@ private:
     std::vector<ControlBase*> controls;
     TaskHandle_t taskHandle;
     bool stopCppTask;
+    uint8_t* headerString;
 };
 
 #endif /* CONTROLS_SCREENBASE_H_ */

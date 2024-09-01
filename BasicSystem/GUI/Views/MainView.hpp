@@ -14,7 +14,7 @@
 
 class MainView : public ScreenBase {
 public:
-	MainView(uint8_t* headerString);
+	MainView(uint8_t* headerString, ScreenManager& manager);
     virtual ~MainView();
 
 private:

@@ -7,26 +7,29 @@
 
 #include "ScreenBase.h"
 #include "stm32746g_discovery_lcd.h"
+#include "ScreenManager.hpp"
 
 
-
-ScreenBase::ScreenBase(uint8_t* headerString)
+ScreenBase::ScreenBase(uint8_t* HeaderString, ScreenManager& manager)
+: screenManager(manager)
 {
 	stopCppTask = false;
-
-    BSP_LCD_Clear(LCD_COLOR_BLACK);
-
-    DrawHeader(headerString, LCD_COLOR_ST_ORANGE);
-    DrawLeftMenu();
-    DrawBottomMenu();
+	headerString = HeaderString;
     StartCppTask();
 }
 
 void ScreenBase::Show()
 {
-	DrawHeader((uint8_t*)"SDCard", LCD_COLOR_ST_ORANGE);
+	BSP_LCD_Clear(LCD_COLOR_BLACK);
+
+	DrawHeader(headerString, LCD_COLOR_ST_ORANGE);
 	DrawLeftMenu();
 	DrawBottomMenu();
+
+	for (ControlBase* control : controls)
+	{
+	    control->Draw();
+	}
 }
 
 void ScreenBase::DrawHeader(uint8_t* headerString, uint32_t Color)
@@ -88,14 +91,6 @@ void ScreenBase::DrawBottomMenu()
 void ScreenBase::AddControlItem(ControlBase* control)
 {
     controls.push_back(control);
-}
-
-void ScreenBase::RefreshScreen()
-{
-    for (ControlBase* control : controls)
-    {
-        control->Draw();
-    }
 }
 
 void ScreenBase::CppTask(void* pvParameters)
